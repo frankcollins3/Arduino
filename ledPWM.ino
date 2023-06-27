@@ -48,6 +48,10 @@ void blinkSequence() {
   	  delay(10);  	
 }
 
+void dimSequence() {
+	analogWrite(9, 9);
+}
+
 void lightSequence () {
    digitalWrite(LED_BUILTIN, HIGH);
   delay(1000); 
@@ -77,7 +81,8 @@ void senLoop() {
         isDimBlinking = false;
       }
       if (c == 'b') {
-		
+        Serial.println("b bulb");
+		dimSequence();
       }
   Serial.println();
  }
