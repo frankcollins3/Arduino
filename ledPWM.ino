@@ -1,43 +1,44 @@
-// int LED_PIN = 13;
-#define SEN_LEN 100;
-int hasLooped = 0;
-int LUCKY_PIN = 13;
-int ELEVENELEVEN = 11;
 int PIN_10 = 10;
 int NINER = 9;
-int bright_lvl = 0;
+int brightness = 0;
+String sen;
+
 
 void setup()
 {
   pinMode(NINER, OUTPUT);
+  pinMode(13, OUTPUT);
+  Serial.begin(9600);  
+  while (!Serial.available()) {
+  }
   
-  Serial.begin(9600);
-	
-  
-  Serial.write('A');
+  delay(100); // Delay to ensure complete input is received
 }
+
 
 void loop()
 {
-  if (Serial.available()) {
-    //  if (Serial.available() && !hasLooped) {
-    Serial.println("enter sentence please");
-    hasLooped++;
-  }
-  
-  for (brightness; brightness <= 200; brightness++) {
-    analogWrite(NINER, brightness);	 
-    delay(5);
-  }
-  
-  for (brightness; brightness >= 0; brightness--) {
-	analogWrite(NINER, brightness);
-    delay(5);
-  }
-  
-  lightSequence();  	 
+
+  delay(1000);
+  delay(1000);     
+	writeStringPrintString();
+	senLoop();
+//  digitalWrite(PIN_10, HIGH);
 }
 
+// void blinkSequence() {
+//	digitalWrite(13, HIGH);
+//	Serial.println("printing to confirm");
+// }
+
+void blinkSequence() {
+	for (int i = 0; i <= 200; i++) {
+//    analogWrite(13, i);	 
+      int bright_setter = i / 2;
+      analogWrite(9, bright_setter);
+	  delay(10);
+  }  
+}
 
 void lightSequence () {
    digitalWrite(LED_BUILTIN, HIGH);
@@ -46,4 +47,27 @@ void lightSequence () {
   delay(1000);
 }
 
+
+void writeStringPrintString() {
+  sen = Serial.readString();
+  int str_len = sen.length();
+  if (str_len >= 1) {
+    Serial.println(sen);    
+  } else {
+    return; // or continue if in a loop.
+  }  
 }
+
+void senLoop() {
+    for (int i = 0; i < sen.length(); i++) {
+	char c = sen[i];
+    Serial.print(c);
+      if (c == 'B') {
+        Serial.println("B aggressive");
+		blinkSequence();
+    }
+  Serial.println();
+ }
+}
+
+//  lightSequence(); //  brightnessFunc(NINER); // func: loop() | setup()
