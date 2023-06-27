@@ -26,7 +26,7 @@ void loop()
 	writeStringPrintString();
 	senLoop();
   if (isBrightBlinking) { blinkSequence(); } 
-  	
+  if (isDimBlinking) { dimSequence(); }
 //  digitalWrite(PIN_10, HIGH);
 }
 
@@ -82,9 +82,12 @@ void senLoop() {
       }
       if (c == 'b') {
         Serial.println("b bulb");
-		dimSequence();
+		isBrightBlinking = false;
+        isDimBlinking = true;
       }
       if (c == '-') {
+        isBrightBlinking = false;
+        isDimBlinking = false;
 		cutLights();
       }
   Serial.println();
