@@ -1,74 +1,53 @@
-#define MAX_WORDS_LENGTH 13
 #define MAX_WORDS 20
-#define LUCKY 13
-
-String sen;
-String uppercasetoggle;
-String lowercasetoggle;
-int tokenize_yet = 0;
+#define MAX_WORD_LENGTH 10
 
 struct Word {
-  int length;
-  char prefix[5];
-  struct Word *next;
+  char w[MAX_WORD_LENGTH];
 };
 
-typedef struct Word Word;
 Word words[MAX_WORDS];
-
-struct Word *head = nullptr;
-struct Word *end = nullptr;
-
 
 void setup() {
   Serial.begin(9600);
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(LUCKY, OUTPUT);
 }
 
 void loop() {
-  // Your loop code here
-  
-  if (tokenize_yet == 0) {
-   	Serial.println("hey tokenize once!");
-    tokenize_yet = 1;
+  if (Serial.available() > 0) {
+    String input = Serial.readStringUntil('\n');
+    tokenize(input);
+    printWords();
   }
 }
 
+void tokenize(String sentence) {
+  int wordIndex = 0;
+  int charIndex = 0;
 
-void init_words() 
-{
-  for (int i = 0; i < MAX_WORDS_LENGTH; i++) {
-    words[i].length = 0;
-    memset(words[i].prefix, 0, sizeof(words[i].prefix));
-    words[i].next = NULL;
-  }
-}
-
-void print_words()
-{
-  head = &words[0];
-  while (head != NULL) {
-    if (head->length != 0) {
-      Serial.println("hey");
-//		Serial.println(head->prefix);
-    }
-  }
-}
-
-void tokenize(String usersentence) 
-{
- int word_index = 0;
- int i = 0;
- int len = usersentence.length();
- 
-  for (i; i < len; i++) {
-    char c = usersentence[i];
-    if (c == ' ' || c == '\n') {
-		words[i].length = word_index;
- strncpy(words[word_index].prefix, &usersentence[i],
-              words[word_index].length >= 4 ? 4 : words[word_index].length);
+  for (int i = 0; i < sentence.length(); i++) {
+    char c = sentence.charAt(i);
+    
+    if (c == ' ') {
+      words[wordIndex].w[charIndex] = '\0'; // Null-terminate the word
+      wordIndex++;
+      charIndex = 0;
+    } else {
+      if (wordIndex < MAX_WORDS && charIndex < MAX_WORD_LENGTH - 1) {
+        words[wordIndex].w[charIndex] = c;
+        charIndex++;
+      }
     }
   }
   
+  words[wordIndex].w[charIndex] = '\0'; // Null-terminate the last word
+}
+
+void printWords() {
+  for (int i = 0; i < MAX_WORDS; i++) {
+    if (words[i].w[0] != '\0') {
+      Serial.print("Word ");
+      Serial.print(i + 1);
+      Serial.print(": ");
+      Serial.println(words[i].w);
+    }
+  }
 }
