@@ -48,9 +48,9 @@ void blinkSequence() {
   	  delay(10);  	
 }
 
-void dimSequence() {
-	analogWrite(9, 9);
-}
+void dimSequence() { analogWrite(9, 9); }
+
+void cutLights() { analogWrite(9, LOW); }
 
 void lightSequence () {
    digitalWrite(LED_BUILTIN, HIGH);
@@ -83,6 +83,9 @@ void senLoop() {
       if (c == 'b') {
         Serial.println("b bulb");
 		dimSequence();
+      }
+      if (c == '-') {
+		cutLights();
       }
   Serial.println();
  }
