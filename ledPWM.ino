@@ -1,6 +1,8 @@
 int PIN_10 = 10;
 int NINER = 9;
 int brightness = 0;
+int isBrightBlinking = false;
+int isDimBlinking = false;
 String sen;
 
 
@@ -23,6 +25,8 @@ void loop()
   delay(1000);     
 	writeStringPrintString();
 	senLoop();
+  if (isBrightBlinking) { blinkSequence(); } 
+  	
 //  digitalWrite(PIN_10, HIGH);
 }
 
@@ -37,7 +41,11 @@ void blinkSequence() {
       int bright_setter = i / 2;
       analogWrite(9, bright_setter);
 	  delay(10);
-  }  
+  	}  
+    for (int i = 200; i >= 0; i--) {
+	  analogWrite(9, i);
+    }
+  	  delay(10);  	
 }
 
 void lightSequence () {
@@ -64,8 +72,13 @@ void senLoop() {
     Serial.print(c);
       if (c == 'B') {
         Serial.println("B aggressive");
-		blinkSequence();
-    }
+//		blinkSequence();
+        isBrightBlinking = true;
+        isDimBlinking = false;
+      }
+      if (c == 'b') {
+		
+      }
   Serial.println();
  }
 }
